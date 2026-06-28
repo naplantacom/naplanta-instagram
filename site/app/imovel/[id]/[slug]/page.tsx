@@ -246,14 +246,14 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
                   className="flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white transition hover:bg-brand-600">
                   <MessageCircle className="h-4 w-4" /> Tenho interesse
                 </a>
-                <a href={msg(`Olá! Gostaria de agendar uma visita ao imóvel "${i.titulo}" (cód. ${i.id}).`)} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 rounded-full border border-ink/15 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-neutral-50">
+                <button disabled
+                  className="flex cursor-not-allowed items-center justify-center gap-2 rounded-full border border-ink/10 px-5 py-3 text-sm font-semibold text-ink-muted opacity-50">
                   <CalendarCheck className="h-4 w-4" /> Agendar visita
-                </a>
-                <a href={msg(`Olá! Gostaria de fazer uma proposta para o imóvel "${i.titulo}" (cód. ${i.id}).`)} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 rounded-full border border-ink/15 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-neutral-50">
+                </button>
+                <button disabled
+                  className="flex cursor-not-allowed items-center justify-center gap-2 rounded-full border border-ink/10 px-5 py-3 text-sm font-semibold text-ink-muted opacity-50">
                   <FileSignature className="h-4 w-4" /> Fazer proposta
-                </a>
+                </button>
                 {i.transacao === "venda" && precoBase > 0 && (
                   <Link href={`/financiamento?valor=${precoBase}`}
                     className="flex items-center justify-center gap-2 rounded-full border border-ink/15 px-5 py-3 text-sm font-semibold text-ink transition hover:bg-neutral-50">
