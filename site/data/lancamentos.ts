@@ -1,0 +1,37 @@
+export interface Empreendimento {
+  slug: string;
+  nome: string;
+  local: string;
+  status: string;
+  precoDe: string;
+  resumo: string;
+  tipologias: string;
+  cover: string;
+  /** Link da landing page do empreendimento (vazio = só WhatsApp por enquanto). */
+  url: string;
+}
+
+export const EMPREENDIMENTOS: Empreendimento[] = [
+  {
+    slug: "inhaus",
+    nome: "InHaus",
+    local: "Grande Florianópolis · SC",
+    status: "Lançamento",
+    precoDe: "A partir de R$ 797.000",
+    resumo: "Apartamentos de 2 e 3 dormitórios com lazer completo e acabamento premium.",
+    tipologias: "2 e 3 dorm · 68 a 115 m²",
+    cover: "/lancamentos/inhaus.jpg",
+    url: "",
+  },
+  {
+    slug: "next-trindade",
+    nome: "Next Trindade",
+    local: "Trindade, Florianópolis · SC",
+    status: "Lançamento",
+    precoDe: "A partir de R$ 363.216",
+    resumo: "Studios, lofts e 2 dormitórios no coração da Trindade, pertinho da UFSC.",
+    tipologias: "Studios, lofts e 2 dorm · 31 a 71 m²",
+    cover: "/lancamentos/next-trindade.jpg",
+    url: "",
+  },
+];
