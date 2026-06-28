@@ -2,20 +2,21 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, UserRound } from "lucide-react";
+import { Menu, X, UserRound, LogIn } from "lucide-react";
 import { LogoNaPlanta } from "./LogoNaPlanta";
 
-const AREA_CLIENTE = "https://www.portalunsoft.com.br/area-do-cliente/naplanta";
+const PORTAL_LOGIN = "https://app.naplanta.com/multi/login.php";
 
 const NAV = [
   { label: "Comprar", href: "/imoveis?finalidade=venda" },
   { label: "Alugar", href: "/imoveis?finalidade=locacao" },
-  { label: "Lançamentos", href: "/lancamentos" },
   { label: "Financiamento", href: "/financiamento" },
   { label: "Sobre", href: "/sobre" },
   { label: "Anuncie seu imóvel", href: "/anuncie" },
   { label: "Contato", href: "/contato" },
 ];
+
+const AREA_CLIENTE = "https://www.portalunsoft.com.br/area-do-cliente/naplanta";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -26,8 +27,11 @@ export function Header() {
       <div className="h-1 w-full bg-brand" />
 
       <div className="container flex h-[72px] items-center justify-between">
-        <Link href="/" className="flex items-center" onClick={() => setOpen(false)} aria-label="NaPlanta — início">
+        <Link href="/" className="flex items-center gap-3" onClick={() => setOpen(false)} aria-label="NaPlanta — início">
           <LogoNaPlanta />
+          <span className="hidden select-none border-l border-black/10 pl-3 text-[11px] font-bold uppercase tracking-widest text-ink-muted sm:block">
+            12<br />anos
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-6 lg:flex">
@@ -40,6 +44,14 @@ export function Header() {
               {n.label}
             </Link>
           ))}
+          <a
+            href={PORTAL_LOGIN}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-black/10 px-4 py-2 text-[13px] font-semibold uppercase tracking-wide text-ink-soft transition hover:border-brand hover:text-brand"
+          >
+            <LogIn className="h-4 w-4" /> Login
+          </a>
           <a
             href={AREA_CLIENTE}
             target="_blank"
@@ -75,11 +87,20 @@ export function Header() {
               </Link>
             ))}
             <a
+              href={PORTAL_LOGIN}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setOpen(false)}
+              className="mt-3 inline-flex items-center justify-center gap-2 rounded-full border border-black/10 px-4 py-3 text-sm font-semibold uppercase tracking-wide text-ink-soft"
+            >
+              <LogIn className="h-4 w-4" /> Login
+            </a>
+            <a
               href={AREA_CLIENTE}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => setOpen(false)}
-              className="mt-3 inline-flex items-center justify-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-semibold uppercase tracking-wide text-white"
+              className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-ink px-4 py-3 text-sm font-semibold uppercase tracking-wide text-white"
             >
               <UserRound className="h-4 w-4" /> Área do cliente
             </a>
