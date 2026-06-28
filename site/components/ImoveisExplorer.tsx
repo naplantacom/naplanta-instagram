@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2, SearchX } from "lucide-react";
 import { PropertyCard } from "./PropertyCard";
 import { listProperties } from "@/services/properties";
@@ -9,6 +10,7 @@ import type { Facets, PropertyCard as Card, PropertyFilters } from "@/types/prop
 const PER_PAGE = 12;
 
 export function ImoveisExplorer({ facets, initial }: { facets: Facets; initial: PropertyFilters }) {
+  const router = useRouter();
   const [filters, setFilters] = useState<PropertyFilters>(initial);
   const [items, setItems] = useState<Card[]>([]);
   const [page, setPage] = useState(1);
@@ -90,7 +92,13 @@ export function ImoveisExplorer({ facets, initial }: { facets: Facets; initial: 
             type="text"
             defaultValue={filters.q ?? ""}
             onChange={(e) => set({ q: e.target.value || undefined })}
-            placeholder="Bairro, condomínio, características…"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const val = (e.target as HTMLInputElement).value.trim();
+                if (/^\d+$/.test(val)) router.push(`/imovel/${val}`);
+              }
+            }}
+            placeholder="Bairro, condomínio ou código do imóvel…"
             className="min-w-[180px] flex-1 rounded-xl bg-neutral-100 px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand/30"
           />
           <select className={selCls} value={filters.cidade ?? ""} onChange={(e) => set({ cidade: e.target.value || undefined })}>
