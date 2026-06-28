@@ -189,10 +189,6 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
                   {temDesconto ? (
                     <div className="text-right">
                       <span className="block text-sm text-ink-muted line-through">{formatBRL(valorPrincipal)}{sufMes}</span>
-                      <span className="text-2xl font-bold text-green-600">
-                        {formatBRL(i.preco_promocional!)}
-                        {sufMes && <span className="text-base font-medium text-green-500">{sufMes}</span>}
-                      </span>
                     </div>
                   ) : (
                     <span className="text-2xl font-bold text-ink">
@@ -201,6 +197,13 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
                     </span>
                   )}
                 </div>
+                {temDesconto && (
+                  <div className="-mx-5 mb-3 mt-2 bg-red-600 px-5 py-3 text-center shadow-inner">
+                    <span className="text-2xl font-extrabold tracking-tight text-white drop-shadow">
+                      {formatBRL(i.preco_promocional!)}{sufMes && <span className="text-lg font-bold">{sufMes}</span>}
+                    </span>
+                  </div>
+                )}
                 {i.condominio > 0 && (
                   <div className="mt-2 flex justify-between text-sm text-ink-muted">
                     <span>Condomínio</span><span>{formatBRL(i.condominio)}</span>
