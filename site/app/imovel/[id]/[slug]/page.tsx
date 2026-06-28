@@ -94,7 +94,7 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
       <div className="grid gap-8 lg:grid-cols-3">
         {/* COLUNA PRINCIPAL */}
         <div className="min-w-0 lg:col-span-2">
-          <Gallery fotos={i.fotos ?? []} titulo={i.titulo} />
+          <Gallery fotos={i.fotos ?? []} titulo={i.titulo} badge={badgeDesconto ?? undefined} />
 
           <h1 className="mt-6 font-display text-2xl font-bold text-ink sm:text-3xl">{i.titulo}</h1>
           {local && (
@@ -177,12 +177,7 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
 
               {/* Resumo de despesas */}
               <div className="px-5 py-4">
-                {badgeDesconto && (
-                  <div className="mb-3 flex items-center gap-2">
-                    <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">{badgeDesconto}</span>
-                  </div>
-                )}
-                <div className="flex items-baseline justify-between">
+<div className="flex items-baseline justify-between">
                   <span className="text-sm font-semibold uppercase tracking-wide text-brand">Valor</span>
                   {temDesconto ? (
                     <div className="text-right">

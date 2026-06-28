@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X, Expand } from "lucide-react";
 
-export function Gallery({ fotos, titulo }: { fotos: string[]; titulo: string }) {
+export function Gallery({ fotos, titulo, badge }: { fotos: string[]; titulo: string; badge?: string }) {
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
   const n = fotos.length;
@@ -62,6 +62,11 @@ export function Gallery({ fotos, titulo }: { fotos: string[]; titulo: string }) 
           />
         </button>
 
+        {badge && (
+          <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-brand px-4 py-1.5 text-sm font-bold text-white shadow-lg">
+            {badge}
+          </span>
+        )}
         <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-xs font-medium text-white">
           <Expand className="h-3 w-3" /> ampliar
         </span>
