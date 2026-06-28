@@ -63,9 +63,10 @@ export function Gallery({ fotos, titulo, badge }: { fotos: string[]; titulo: str
         </button>
 
         {badge && (
-          <span className="pointer-events-none absolute left-3 top-3 rounded-full bg-brand px-4 py-1.5 text-sm font-bold text-white shadow-lg">
-            {badge}
-          </span>
+          <div className="pointer-events-none absolute left-3 top-3 rounded-xl border-2 border-yellow-400 bg-red-600 px-4 py-2 text-center shadow-xl">
+            <div className="text-[10px] font-bold uppercase tracking-widest text-yellow-300">🔥 Oferta Especial</div>
+            <div className="text-base font-extrabold leading-tight text-white">{badge}</div>
+          </div>
         )}
         <span className="pointer-events-none absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-xs font-medium text-white">
           <Expand className="h-3 w-3" /> ampliar

@@ -57,11 +57,12 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
   const isLoc = i.transacao === "locacao";
   const valorPrincipal = isLoc ? i.preco_locacao || i.preco_venda : i.preco_venda || i.preco_locacao;
   const temDesconto = !!i.preco_promocional && i.preco_promocional > 0;
-  const badgeDesconto = temDesconto
+  const descontoTexto = temDesconto
     ? i.desconto_tipo === "percentual"
-      ? `${i.desconto_valor}% OFF`
+      ? `${i.desconto_valor}% DE DESCONTO`
       : `- ${formatBRL(i.desconto_valor ?? 0)}`
     : null;
+  const badgeDesconto = descontoTexto; // mantido para Gallery (texto simples)
   const totalLoc = valorPrincipal + (i.condominio || 0) + (i.iptu || 0) + (i.iptu_vaga || 0) + (i.taxa_lixo || 0) + (i.seguro || 0);
   const sufMes = isLoc ? "/mês" : "";
 
@@ -177,9 +178,10 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
 
               {/* Resumo de despesas */}
               <div className="px-5 py-4">
-                {badgeDesconto && (
-                  <div className="mb-4">
-                    <span className="rounded-full bg-red-600 px-5 py-2 text-base font-extrabold text-white shadow-md">{badgeDesconto}</span>
+                {descontoTexto && (
+                  <div className="mb-4 inline-block rounded-xl border-2 border-yellow-400 bg-red-600 px-5 py-2 text-center shadow-lg">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-yellow-300">🔥 Oferta Especial</div>
+                    <div className="text-lg font-extrabold leading-tight text-white">{descontoTexto}</div>
                   </div>
                 )}
                 <div className="flex items-baseline justify-between">
