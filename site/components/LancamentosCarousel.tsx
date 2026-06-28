@@ -16,7 +16,7 @@ export function LancamentosCarousel({ items }: { items: Empreendimento[] }) {
         const next = prev + 2;
         return next >= items.length ? 0 : next;
       });
-    }, 10000);
+    }, 5000);
     return () => clearInterval(id);
   }, [items.length]);
 
