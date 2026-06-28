@@ -56,6 +56,12 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
   const precoBase = i.preco_venda || i.preco_locacao;
   const isLoc = i.transacao === "locacao";
   const valorPrincipal = isLoc ? i.preco_locacao || i.preco_venda : i.preco_venda || i.preco_locacao;
+  const temDesconto = !!i.preco_promocional && i.preco_promocional > 0;
+  const badgeDesconto = temDesconto
+    ? i.desconto_tipo === "percentual"
+      ? `${i.desconto_valor}% OFF`
+      : `- ${formatBRL(i.desconto_valor ?? 0)}`
+    : null;
   const totalLoc = valorPrincipal + (i.condominio || 0) + (i.iptu || 0) + (i.iptu_vaga || 0) + (i.taxa_lixo || 0) + (i.seguro || 0);
   const sufMes = isLoc ? "/mês" : "";
 
@@ -171,12 +177,27 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
 
               {/* Resumo de despesas */}
               <div className="px-5 py-4">
+                {badgeDesconto && (
+                  <div className="mb-3 flex items-center gap-2">
+                    <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white">{badgeDesconto}</span>
+                  </div>
+                )}
                 <div className="flex items-baseline justify-between">
                   <span className="text-sm font-semibold uppercase tracking-wide text-brand">Valor</span>
-                  <span className="text-2xl font-bold text-ink">
-                    {formatBRL(valorPrincipal)}
-                    {sufMes && <span className="text-base font-medium text-ink-muted">{sufMes}</span>}
-                  </span>
+                  {temDesconto ? (
+                    <div className="text-right">
+                      <span className="block text-sm text-ink-muted line-through">{formatBRL(valorPrincipal)}{sufMes}</span>
+                      <span className="text-2xl font-bold text-green-600">
+                        {formatBRL(i.preco_promocional!)}
+                        {sufMes && <span className="text-base font-medium text-green-500">{sufMes}</span>}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-2xl font-bold text-ink">
+                      {formatBRL(valorPrincipal)}
+                      {sufMes && <span className="text-base font-medium text-ink-muted">{sufMes}</span>}
+                    </span>
+                  )}
                 </div>
                 {i.condominio > 0 && (
                   <div className="mt-2 flex justify-between text-sm text-ink-muted">
