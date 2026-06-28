@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Building2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { SearchBar } from "@/components/SearchBar";
 import { PropertyCard } from "@/components/PropertyCard";
 import { getFacets } from "@/services/facets";
@@ -132,32 +132,6 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* CIDADES */}
-      {facets.cidades.length > 0 && (
-        <section className="container pb-16">
-          <h2 className="mb-7 font-display text-2xl font-bold text-ink sm:text-3xl">Onde você quer morar?</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {facets.cidades.slice(0, 8).map((c) => (
-              <Link
-                key={c.nome}
-                href={`/imoveis?cidade=${encodeURIComponent(c.nome)}`}
-                className="group flex items-center justify-between rounded-2xl border border-black/5 bg-white p-5 shadow-card transition hover:border-brand/30"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand">
-                    <Building2 className="h-5 w-5" />
-                  </span>
-                  <div>
-                    <p className="font-medium text-ink">{c.nome}</p>
-                    <p className="text-xs text-ink-muted">{c.total} imóveis</p>
-                  </div>
-                </div>
-                <ArrowRight className="h-4 w-4 text-ink-muted transition group-hover:translate-x-1 group-hover:text-brand" />
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
 
       {/* CTA */}
       <section className="container pb-8">
