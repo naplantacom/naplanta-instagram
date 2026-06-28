@@ -2,11 +2,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { BedDouble, Bath, Car, Maximize, Star } from "lucide-react";
 import type { PropertyCard as Card } from "@/types/property";
-import { priceLabel, area, slugify } from "@/lib/format";
+import { priceLabel, formatBRL, area, slugify } from "@/lib/format";
 
 export function PropertyCard({ imovel }: { imovel: Card }) {
   const href = `/imovel/${imovel.id}/${slugify(imovel.titulo)}`;
   const local = [imovel.bairro, imovel.cidade].filter(Boolean).join(", ");
+  const temDesconto = !!imovel.preco_promocional && imovel.preco_promocional > 0;
+
+  const badgeDesconto = temDesconto
+    ? imovel.desconto_tipo === "percentual"
+      ? `${imovel.desconto_valor}% OFF`
+      : `- ${formatBRL(imovel.desconto_valor ?? 0)}`
+    : null;
 
   return (
     <Link
@@ -28,7 +35,12 @@ export function PropertyCard({ imovel }: { imovel: Card }) {
         <span className="absolute left-3 top-3 rounded-full bg-ink/85 px-3 py-1 text-xs font-medium text-white backdrop-blur">
           {imovel.transacao === "locacao" ? "Locação" : "Venda"}
         </span>
-        {imovel.destaque && (
+        {badgeDesconto && (
+          <span className="absolute left-3 bottom-3 rounded-full bg-green-500 px-3 py-1 text-xs font-bold text-white shadow">
+            {badgeDesconto}
+          </span>
+        )}
+        {imovel.destaque && !badgeDesconto && (
           <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-white">
             <Star className="h-3 w-3 fill-current" /> Destaque
           </span>
@@ -41,7 +53,18 @@ export function PropertyCard({ imovel }: { imovel: Card }) {
       </div>
 
       <div className="p-4">
-        <p className="text-lg font-semibold text-ink">{priceLabel(imovel)}</p>
+        {temDesconto ? (
+          <div>
+            <p className="text-xs text-ink-muted line-through">{priceLabel(imovel)}</p>
+            <p className="text-lg font-bold text-green-600">
+              {imovel.transacao === "locacao"
+                ? `${formatBRL(imovel.preco_promocional!)}/mês`
+                : formatBRL(imovel.preco_promocional!)}
+            </p>
+          </div>
+        ) : (
+          <p className="text-lg font-semibold text-ink">{priceLabel(imovel)}</p>
+        )}
         <h3 className="mt-1 line-clamp-2 text-sm text-ink-soft">{imovel.titulo}</h3>
         {local && <p className="mt-1 text-sm text-ink-muted">{local}</p>}
 

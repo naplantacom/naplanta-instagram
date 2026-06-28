@@ -23,6 +23,9 @@ export interface PropertyCard {
   condominio_nome: string;
   destaque: boolean;
   capa: string | null;
+  desconto_tipo?: "percentual" | "valor";
+  desconto_valor?: number;
+  preco_promocional?: number;
   fotos_total: number;
 }
 
