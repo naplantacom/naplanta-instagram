@@ -8,12 +8,12 @@ const WPP_FALLBACK = "5548991531668";
 
 const OPCOES = [
   {
-    label: "Prontos e Locação",
-    text: "Olá! Quero falar sobre imóveis prontos ou locação com a NaPlanta.",
+    label: "Locação",
+    text: "Olá! Quero falar sobre imóveis para alugar com a NaPlanta.",
   },
   {
-    label: "Lançamentos",
-    text: "Olá! Quero saber mais sobre os lançamentos da NaPlanta.",
+    label: "Vendas",
+    text: "Olá! Quero falar sobre imóveis à venda com a NaPlanta.",
   },
 ];
 
