@@ -14,11 +14,17 @@ export function SearchBar({ facets }: { facets: Facets }) {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
+    const term = q.trim();
+    // Só números → busca direta por código do imóvel
+    if (/^\d+$/.test(term)) {
+      router.push(`/imovel/${term}`);
+      return;
+    }
     const p = new URLSearchParams();
     p.set("finalidade", finalidade);
     if (cidade) p.set("cidade", cidade);
     if (tipo) p.set("tipo", tipo);
-    if (q.trim()) p.set("q", q.trim());
+    if (term) p.set("q", term);
     router.push(`/imoveis?${p.toString()}`);
   }
 
@@ -48,7 +54,7 @@ export function SearchBar({ facets }: { facets: Facets }) {
           type="text"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Busque por bairro, condomínio ou características…"
+          placeholder="Bairro, condomínio ou código do imóvel…"
           className="min-w-0 flex-1 rounded-xl px-4 py-3 text-sm text-ink outline-none placeholder:text-ink-muted"
         />
         <select
