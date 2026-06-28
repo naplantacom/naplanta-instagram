@@ -178,8 +178,8 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
               {/* Resumo de despesas */}
               <div className="px-5 py-4">
                 {badgeDesconto && (
-                  <div className="mb-3">
-                    <span className="rounded-full bg-brand px-3 py-1 text-xs font-bold text-white">{badgeDesconto}</span>
+                  <div className="mb-4">
+                    <span className="rounded-full bg-red-600 px-5 py-2 text-base font-extrabold text-white shadow-md">{badgeDesconto}</span>
                   </div>
                 )}
                 <div className="flex items-baseline justify-between">
