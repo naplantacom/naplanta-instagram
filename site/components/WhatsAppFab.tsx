@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 
 const WPP_FALLBACK = "5548991531668";
@@ -17,11 +17,21 @@ const OPCOES = [
   },
 ];
 
-export function WhatsAppFab() {
+// ⚽ modoCopa (vem do módulo Portais → Extras): quando ligado, o botão vira bola
+// e comemora um gol a cada 10s. Desligado = botão normal (verde, arrastável).
+export function WhatsAppFab({ modoCopa = false }: { modoCopa?: boolean }) {
   const wpp = process.env.NEXT_PUBLIC_WHATSAPP || WPP_FALLBACK;
   const [teaser, setTeaser] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [celebrating, setCelebrating] = useState(false);
+  const [dy, setDy] = useState(0);
 
+  const menuOpenRef = useRef(false);
+  useEffect(() => {
+    menuOpenRef.current = menuOpen;
+  }, [menuOpen]);
+
+  // teaser balão (mantido)
   useEffect(() => {
     if (!wpp) return;
     if (sessionStorage.getItem("waTeaserOff")) return;
@@ -40,6 +50,35 @@ export function WhatsAppFab() {
     return () => timers.forEach(clearTimeout);
   }, [wpp]);
 
+  // ⚽ Comemoração de gol a cada 10s (pausa enquanto o menu estiver aberto)
+  useEffect(() => {
+    if (!modoCopa) return;
+    const iv = setInterval(() => {
+      if (menuOpenRef.current) return;
+      setCelebrating(true);
+      setTimeout(() => setCelebrating(false), 1600);
+    }, 10000);
+    return () => clearInterval(iv);
+  }, [modoCopa]);
+
+  // Arrastar o botão na vertical (para cima / para baixo)
+  const drag = useRef({ active: false, startY: 0, startDy: 0, moved: false });
+  function onPointerDown(e: React.PointerEvent) {
+    drag.current = { active: true, startY: e.clientY, startDy: dy, moved: false };
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+  }
+  function onPointerMove(e: React.PointerEvent) {
+    if (!drag.current.active) return;
+    const delta = e.clientY - drag.current.startY;
+    if (Math.abs(delta) > 4) drag.current.moved = true;
+    const maxUp = -(window.innerHeight - 140); // não sobe além do topo
+    const next = Math.max(maxUp, Math.min(0, drag.current.startDy + delta));
+    setDy(next);
+  }
+  function onPointerUp() {
+    drag.current.active = false;
+  }
+
   function dismissTeaser(e: React.MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
@@ -47,7 +86,12 @@ export function WhatsAppFab() {
     sessionStorage.setItem("waTeaserOff", "1");
   }
 
-  function toggleMenu() {
+  function handleClick() {
+    // Se foi arraste, não abre o menu.
+    if (drag.current.moved) {
+      drag.current.moved = false;
+      return;
+    }
     setTeaser(false);
     setMenuOpen((v) => !v);
   }
@@ -58,11 +102,29 @@ export function WhatsAppFab() {
 
   if (!wpp) return null;
 
+  const follow = { transform: `translateY(${dy}px)` };
+  const modoBola = modoCopa && celebrating && !menuOpen;
+
   return (
     <>
+      {/* GOOOL! */}
+      {modoBola && (
+        <div className="pointer-events-none fixed bottom-[96px] right-3 z-50" style={follow}>
+          <div
+            className="gol-pop select-none rounded-full px-4 py-2 text-lg font-extrabold text-white shadow-xl"
+            style={{ background: "linear-gradient(135deg,#009C3B 0%,#FEDF00 100%)", textShadow: "0 1px 3px rgba(0,0,0,.35)" }}
+          >
+            ⚽ GOOOL!
+          </div>
+        </div>
+      )}
+
       {/* teaser balão */}
-      {teaser && !menuOpen && (
-        <div className="fixed bottom-[92px] right-5 z-50 flex max-w-[260px] items-center gap-3 rounded-2xl bg-white p-3 pr-8 shadow-xl ring-1 ring-black/5">
+      {teaser && !menuOpen && !modoBola && (
+        <div
+          className="fixed bottom-[92px] right-5 z-50 flex max-w-[260px] items-center gap-3 rounded-2xl bg-white p-3 pr-8 shadow-xl ring-1 ring-black/5"
+          style={follow}
+        >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#25D366]">
             <Image src="/na-simbolo.png" alt="" width={26} height={24} className="object-contain" aria-hidden="true" />
           </span>
@@ -85,7 +147,7 @@ export function WhatsAppFab() {
         <>
           {/* overlay para fechar */}
           <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
-          <div className="fixed bottom-[92px] right-5 z-50 overflow-hidden rounded-2xl bg-[#1e6b46] shadow-2xl">
+          <div className="fixed bottom-[92px] right-5 z-50 overflow-hidden rounded-2xl bg-[#1e6b46] shadow-2xl" style={follow}>
             {OPCOES.map((op) => (
               <a
                 key={op.label}
@@ -108,18 +170,31 @@ export function WhatsAppFab() {
         </>
       )}
 
-      {/* botão principal */}
-      <button
-        type="button"
-        onClick={toggleMenu}
-        aria-label="Falar com a NaPlanta no WhatsApp"
-        className="wa-fab fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] transition hover:scale-105"
-      >
-        {menuOpen
-          ? <X className="h-7 w-7 text-white" />
-          : <Image src="/na-simbolo.png" alt="" width={40} height={37} className="object-contain" aria-hidden="true" />
-        }
-      </button>
+      {/* botão principal (arrastável) */}
+      <div className="fixed bottom-5 right-5 z-50" style={follow}>
+        <button
+          type="button"
+          onClick={handleClick}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          aria-label="Falar com a NaPlanta no WhatsApp (arraste para reposicionar)"
+          style={{ touchAction: "none" }}
+          className={`wa-fab relative flex h-16 w-16 cursor-grab items-center justify-center rounded-full transition hover:scale-105 active:cursor-grabbing ${
+            modoBola ? "bg-white" : "bg-[#25D366]"
+          }`}
+        >
+          <span className={modoBola ? "wa-kick flex items-center justify-center" : "flex items-center justify-center"}>
+            {modoBola ? (
+              <span className="wa-ball select-none text-5xl leading-none">⚽</span>
+            ) : menuOpen ? (
+              <X className="h-7 w-7 text-white" />
+            ) : (
+              <Image src="/na-simbolo.png" alt="" width={40} height={37} className="object-contain" aria-hidden="true" />
+            )}
+          </span>
+        </button>
+      </div>
     </>
   );
 }

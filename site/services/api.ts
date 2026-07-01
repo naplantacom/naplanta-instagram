@@ -6,7 +6,7 @@
  * chama o PHP de tempos em tempos, contornando a lentidão do compartilhado.
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "https://www.virtualnaplanta.com.br/multi/api/v1";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "https://app.naplanta.com/multi/api/v1";
 const EMPRESA = process.env.NEXT_PUBLIC_EMPRESA ?? "naplanta";
 
 export interface FetchOpts {

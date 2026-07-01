@@ -42,7 +42,7 @@ const config: Config = {
         "2xl": "1.25rem",
       },
       boxShadow: {
-        card: "0 1px 3px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.06)",
+        card: "0 2px 6px rgba(0,0,0,.08), 0 14px 34px rgba(0,0,0,.12)",
       },
     },
   },

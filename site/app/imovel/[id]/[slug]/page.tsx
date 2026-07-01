@@ -8,7 +8,7 @@ import {
 import { Gallery } from "@/components/Gallery";
 import { PropertyCard } from "@/components/PropertyCard";
 import { getProperty } from "@/services/properties";
-import { formatBRL, priceLabel, area, humanize } from "@/lib/format";
+import { formatBRL, priceLabel, area, humanize, extensoReais } from "@/lib/format";
 import type { PropertyDetail } from "@/types/property";
 
 export const revalidate = 60;
@@ -36,10 +36,10 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 function Spec({ icon, value, label }: { icon: React.ReactNode; value: string | number; label: string }) {
   return (
-    <div className="flex flex-col items-center rounded-xl bg-neutral-50 px-2 py-3 text-center">
-      <span className="text-ink-muted">{icon}</span>
+    <div className="group flex cursor-default flex-col items-center rounded-xl bg-neutral-50 px-2 py-3 text-center ring-1 ring-transparent transition duration-200 ease-out hover:-translate-y-1 hover:bg-white hover:shadow-md hover:ring-black/5">
+      <span className="text-ink-muted transition-colors duration-200 group-hover:text-brand">{icon}</span>
       <span className="mt-1 text-sm font-semibold text-ink">{value}</span>
-      <span className="text-xs text-ink-muted">{label}</span>
+      <span className="text-xs text-ink-muted transition-colors duration-200 group-hover:text-ink">{label}</span>
     </div>
   );
 }
@@ -60,9 +60,13 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
   const descontoTexto = temDesconto
     ? i.desconto_tipo === "percentual"
       ? `${i.desconto_valor}% DE DESCONTO`
-      : `- ${formatBRL(i.desconto_valor ?? 0)}`
+      : `Por ${formatBRL(i.preco_promocional!)}`
     : null;
-  const badgeDesconto = descontoTexto; // mantido para Gallery (texto simples)
+  const badgeDesconto = temDesconto
+    ? i.desconto_tipo === "percentual"
+      ? `${i.desconto_valor}% OFF`
+      : `Por ${formatBRL(i.preco_promocional!)}`
+    : undefined;
   const totalLoc = valorPrincipal + (i.condominio || 0) + (i.iptu || 0) + (i.iptu_vaga || 0) + (i.taxa_lixo || 0) + (i.seguro || 0);
   const sufMes = isLoc ? "/mês" : "";
 
@@ -191,17 +195,23 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
                       <span className="block text-sm text-ink-muted line-through">{formatBRL(valorPrincipal)}{sufMes}</span>
                     </div>
                   ) : (
-                    <span className="text-2xl font-bold text-ink">
-                      {formatBRL(valorPrincipal)}
-                      {sufMes && <span className="text-base font-medium text-ink-muted">{sufMes}</span>}
-                    </span>
+                    <div className="text-right">
+                      <span className="block text-2xl font-bold text-ink">
+                        {formatBRL(valorPrincipal)}
+                        {sufMes && <span className="text-base font-medium text-ink-muted">{sufMes}</span>}
+                      </span>
+                      {valorPrincipal > 0 && (
+                        <span className="mt-0.5 block text-xs text-ink-muted">({extensoReais(valorPrincipal)})</span>
+                      )}
+                    </div>
                   )}
                 </div>
                 {temDesconto && (
                   <div className="-mx-5 mb-3 mt-2 bg-red-600 px-5 py-3 text-center shadow-inner">
-                    <span className="text-2xl font-extrabold tracking-tight text-white drop-shadow">
+                    <span className="block text-2xl font-extrabold tracking-tight text-white drop-shadow">
                       {formatBRL(i.preco_promocional!)}{sufMes && <span className="text-lg font-bold">{sufMes}</span>}
                     </span>
+                    <span className="mt-1 block text-xs font-medium text-white/85">({extensoReais(i.preco_promocional!)})</span>
                   </div>
                 )}
                 {i.condominio > 0 && (

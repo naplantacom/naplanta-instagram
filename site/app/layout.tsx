@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { getSiteConfig } from "@/services/site";
 
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 const display = Sora({
@@ -31,14 +32,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const { modo_copa } = await getSiteConfig();
   return (
     <html lang="pt-BR" className={`${sans.variable} ${display.variable}`}>
       <body className="font-sans">
         <Header />
         <main>{children}</main>
         <Footer />
-        <WhatsAppFab />
+        <WhatsAppFab modoCopa={modo_copa} />
       </body>
     </html>
   );
