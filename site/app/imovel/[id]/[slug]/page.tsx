@@ -60,12 +60,12 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
   const descontoTexto = temDesconto
     ? i.desconto_tipo === "percentual"
       ? `${i.desconto_valor}% DE DESCONTO`
-      : `Por ${formatBRL(i.preco_promocional!)}`
+      : `- ${formatBRL(i.desconto_valor ?? 0)}`
     : null;
   const badgeDesconto = temDesconto
     ? i.desconto_tipo === "percentual"
       ? `${i.desconto_valor}% OFF`
-      : `Por ${formatBRL(i.preco_promocional!)}`
+      : `- ${formatBRL(i.desconto_valor ?? 0)}`
     : undefined;
   const totalLoc = valorPrincipal + (i.condominio || 0) + (i.iptu || 0) + (i.iptu_vaga || 0) + (i.taxa_lixo || 0) + (i.seguro || 0);
   const sufMes = isLoc ? "/mês" : "";
