@@ -207,11 +207,11 @@ export default async function ImovelPage({ params }: { params: Promise<{ id: str
                   )}
                 </div>
                 {temDesconto && (
-                  <div className="-mx-5 mb-3 mt-2 bg-red-600 px-5 py-3 text-center shadow-inner">
-                    <span className="block text-2xl font-extrabold tracking-tight text-white drop-shadow">
+                  <div className="mb-3 mt-2 rounded-2xl border-2 border-yellow-400 bg-gradient-to-b from-red-500 to-red-600 px-5 py-4 text-center shadow-lg">
+                    <span className="block text-3xl font-extrabold tracking-tight text-white drop-shadow">
                       {formatBRL(i.preco_promocional!)}{sufMes && <span className="text-lg font-bold">{sufMes}</span>}
                     </span>
-                    <span className="mt-1 block text-xs font-medium text-white/85">({extensoReais(i.preco_promocional!)})</span>
+                    <span className="mt-1 block text-xs font-medium text-yellow-100/90">({extensoReais(i.preco_promocional!)})</span>
                   </div>
                 )}
                 {i.condominio > 0 && (
